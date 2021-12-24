@@ -1,25 +1,25 @@
-import express, { Response } from 'express'
+import express, {Request, Response} from 'express'
 import dotenv from 'dotenv'
 import scrapRoutes from './routes/scrapRoutes.js'
 import indexRoutes from './routes/indexRoutes.js'
 import { connect } from './db.js'
+import {ApiError} from "./utils/ApiError.js";
+import dbRoutes from "./routes/dbRoutes.js";
 
 const app = express()
 dotenv.config()
 
 app.use('/', indexRoutes)
+app.use('/db', dbRoutes)
 app.use('/scrap', scrapRoutes)
-app.use('/', (req, res) => {
+app.use('/', (req:Request, res:Response) => {
   res.statusCode = 404
-  throw new Error('Not Found - ' + req.path)
+  throw new ApiError(res, 'Not Found - ' + req.path, 404)
 })
 
 //@ts-ignore
 app.use((err, req, res: Response, next) => {
   console.log(err)
-  if (res.statusCode < 400) {
-    res.statusCode = 400
-  }
   res.json({ status: 'FAILURE', message: err.message })
 })
 
