@@ -16,4 +16,4 @@
 * Send a **GET** request to `/db` to get all stored details from DB
 * Method also supports paging. For eg.
   1. **GET** `/db?page=2&size=20` - Will give records of page 2, each page having 20 records
-* Send a **GET** request to `/scrap/clear` to clear the Database
+* Send a **GET** request to `/db/clear` to clear the Database
