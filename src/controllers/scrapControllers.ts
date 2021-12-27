@@ -42,15 +42,23 @@ export const scrapFlipkartMobilesToDb = asyncHandler(
           const price = $(el).find('div._30jeq3._1_WHN1').text()
           const stars = +$(el).find('div._3LWZlK').text()
           const details = $(el).find('span._2_R_DZ').text().split('&')
-          const ratings = +details[0].trim().split(' ')[0].replaceAll(',', '')
-          const reviews = +details[1].trim().split(' ')[0].replaceAll(',', '')
+          const ratings = +details[0]?.trim().split(' ')[0]?.replaceAll(',', '')
+          const reviews = +details[1]?.trim().split(' ')[0]?.replaceAll(',', '')
           const features: string[] = []
           $(el)
             .find('li.rgWa7D')
             .each((_, it) => {
               features.push($(it).text())
             })
-          mobiles.push({ name, price, link, stars, ratings, reviews, features })
+          mobiles.push({
+            name,
+            price,
+            link,
+            stars,
+            ratings: isNaN(ratings) ? 0 : ratings,
+            reviews: isNaN(reviews) ? 0 : reviews,
+            features,
+          })
         })
       } catch (e: any) {
         throw new ApiError(res, e.message)
