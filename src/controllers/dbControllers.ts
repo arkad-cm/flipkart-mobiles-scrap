@@ -1,6 +1,8 @@
 import asyncHandler from 'express-async-handler'
 import { Request, Response } from 'express'
 import FlipkartMobileModel from '../models/FlipkartMobile.model.js'
+import logger from '../utils/logger.js'
+import events from '../events.js'
 
 const getNumberOrDefault = (
   val: any,
@@ -46,20 +48,14 @@ export const getAllMobiles = asyncHandler(
     const results = await FlipkartMobileModel.find()
       .skip((page - 1) * limit)
       .limit(limit)
+    logger.info(
+      events.RETRIEVE,
+      `Retrieved Items with configuration: {page: ${page}, limit: ${limit}, dbCount: ${count}`,
+    )
     res.status(200).json({
       status: 'SUCCESS',
       page: { number: page, size: limit, count: results.length },
       results,
-    })
-  },
-)
-
-export const removeAllMobiles = asyncHandler(
-  async (req: Request, res: Response) => {
-    const result = await FlipkartMobileModel.deleteMany()
-    res.status(200).json({
-      status: 'SUCCESS',
-      result,
     })
   },
 )
