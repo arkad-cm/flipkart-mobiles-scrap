@@ -19,9 +19,10 @@ const getLogs = async (req: Request, res: Response, fileName: string) => {
   if (maxLineCount > 100) {
     maxLineCount = 100
   }
-  const lines = (
-    await readLastLines(`logs/${fileName}.log`, maxLineCount)
-  ).split('\n').reverse().slice(1)
+  let lines = (await readLastLines(`logs/${fileName}.log`, maxLineCount)).split(
+    '\n',
+  )
+  lines = lines.slice(0, lines.length - 1)
   res.status(200).json({
     status: 'SUCCESS',
     message: 'Retrieved logs successfully',
